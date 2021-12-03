@@ -1,14 +1,14 @@
-Django==3.1.8
+Django==3.1.13
 psycopg2-binary==2.8.6
 python3-vote-core==20170329.0
 whitenoise==5.2.0
 sentry-sdk==0.19.4
-pylint==2.6.0
+pylint==2.7.0
 pylint-django==2.3.0
 django-sass==1.0.0
 django-cacheops==5.1
 # Dev
-django-debug-toolbar==3.1.1
+django-debug-toolbar==1.11.1
 django-silk==4.1.0
 django_nplusone==0.0.5
 pytest-django==4.1.0
