@@ -85,7 +85,7 @@ LOGIN_URL = "/admin/"
 LOGIN_REDIRECT_URL = "/vaalikoppi/admin/"
 
 
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
 
 DB_USER = os.environ.get("POSTGRES_USER")
 DB_NAME = os.environ.get("POSTGRES_DATABASE")
