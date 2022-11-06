@@ -1,4 +1,4 @@
-var SITE_ROOT_PATH = "/vaalikoppi/";
+var SITE_ROOT_PATH = "/";
 var SOUND_STATE = 0;
 var currentVotingId = -1;
 var votesGiven = 0;
