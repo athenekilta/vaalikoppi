@@ -39,6 +39,7 @@ def get_token_from_session(request):
 
 def is_eligible_to_vote_normal(token, voting):
     token_mappings = [t for t in voting.token_mappings.all() if t.token == token]
+    token_mapping = None
     if len(token_mappings) == 1:
         token_mapping = token_mappings[0]
 
