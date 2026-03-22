@@ -103,7 +103,7 @@ def open_voting(request, voting_id):
             candidate_name="Tyhjä", empty_candidate=True, voting=voting_obj
         ).save()
 
-    if voting_obj.is_open or voting_obj.is_ended:
+    if voting_obj.is_open or voting_obj.is_ended or voting_obj.voting_results.exists():
         return JsonResponse(
             {"message": "Voting is already open or has ended"}, status=403
         )
@@ -133,17 +133,25 @@ def transfer_election_has_result(request, voting_obj):
 def close_voting(request, voting_id):
     data = json.loads(request.body.decode("utf-8"))
     is_ranked_choice = data.get("is_ranked_choice")
+    publish = data.get("publish", False)
+
+    if is_ranked_choice:
+        voting_obj = get_object_or_404(RankedChoiceVoting, pk=voting_id)
+    else:
+        voting_obj = get_object_or_404(NormalVoting, pk=voting_id)
+
+    if publish:
+        if not voting_obj.is_open and not voting_obj.is_ended:
+            voting_obj.is_ended = True
+            voting_obj.save()
+            return JsonResponse({"message": "Voting results published"}, status=200)
+        return JsonResponse({"message": "Voting is not in correct state to be published"}, status=403)
 
     def calc_vote_share(vote_count, tot_votes_abs):
         if tot_votes_abs > 0:
             percentage_of_votes = round(100 * vote_count / tot_votes_abs, 1)
             return f"{percentage_of_votes}"
         return "0.0"
-
-    if is_ranked_choice:
-        voting_obj = get_object_or_404(RankedChoiceVoting, pk=voting_id)
-    else:
-        voting_obj = get_object_or_404(NormalVoting, pk=voting_id)
 
     if not voting_obj.is_open or voting_obj.is_ended:
         return JsonResponse({"message": "Voting is not open or has ended"}, status=403)
