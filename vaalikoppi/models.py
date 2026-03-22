@@ -61,7 +61,6 @@ class Voting(models.Model):
 
     def close_voting(self):
         self.is_open = False
-        self.is_ended = True
         self.save()
 
     class Meta:

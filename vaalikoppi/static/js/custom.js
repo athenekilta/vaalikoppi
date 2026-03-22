@@ -516,6 +516,32 @@ function closeVoting(votingId, is_ranked_choice) {
     })
     .then((data) => {
       refreshVotingList(true);
+    })
+    .catch((err) =>
+      showUserNotification(
+        USER_NOTIFICATION.WARNING,
+        "Äänestyksen sulkeminen ei ehkä onnistunut! Päivitä sivu!"
+      )
+    );
+}
+
+function publishVotingResults(votingId, is_ranked_choice) {
+  const data = {
+    is_ranked_choice,
+    publish: true,
+  };
+  callApi(`${SITE_ROOT_PATH}admin/votings/${votingId}/close/`, "POST", data)
+    .then(async (res) => {
+      const data = await res.json();
+      if (res.status !== 200) {
+        if (data.message) {
+          showUserNotification(USER_NOTIFICATION.WARNING, data.message);
+        }
+      }
+      return data;
+    })
+    .then((data) => {
+      refreshVotingList(true);
       // If a sound is already playing, reveal the result with a badum-tss sound
       if (SOUND_STATE !== 0) {
         playSound(3);
@@ -524,7 +550,7 @@ function closeVoting(votingId, is_ranked_choice) {
     .catch((err) =>
       showUserNotification(
         USER_NOTIFICATION.WARNING,
-        "Äänestyksen sulkeminen ei ehkä onnistunut! Päivitä sivu!"
+        "Äänestyksen julkaiseminen ei ehkä onnistunut! Päivitä sivu!"
       )
     );
 }
